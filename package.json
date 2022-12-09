@@ -1,0 +1,23 @@
+{
+  "name": "grpc-api-prototype",
+  "version": "1.0.0",
+  "description": "Prototype",
+  "main": "src/app.ts",
+  "repository": "https://github.com/william-wolff-io/grpc-api-prototype.git",
+  "author": "William Wolff",
+  "license": "MIT",
+  "scripts": {
+    "start": "node ./bin/app.js",
+    "dev": "yarn ts-node ./src/app.ts",
+    "build": "yarn tsc"
+  },
+  "dependencies": {
+    "@types/node": "^18.11.12",
+    "typescript": "^4.9.4"
+  },
+  "devDependencies": {
+    "eslint": "^8.29.0",
+    "prettier": "^2.8.1",
+    "ts-node": "^10.9.1"
+  }
+}
