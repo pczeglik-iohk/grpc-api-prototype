@@ -1,4 +1,7 @@
+
+import Big from "big.js";
 import { createClient } from "redis";
+
 
 const client = createClient({ url: process.env.REDIS_URL });
 
@@ -12,7 +15,7 @@ client.on('disconnect', () => {
 
 
 
-async function main(): Promise<void> {
+async function consumer(): Promise<void> {
   await client.connect();
 
   const cursorSubscriber = client.duplicate();
@@ -25,9 +28,9 @@ async function main(): Promise<void> {
     .subscribe('__keyevent@0__:set', async msg => {
       if (msg === '_cursor') {
         const cursor = await client.get('_cursor');
-        console.log(`Tip: ${cursor}`);
+        console.log(`[Block] New: ${cursor?.split(',')[1] || ''}`);
       } else {
-        console.log(`Unknown event: ${msg}`);
+        console.log(`[Unknown]: ${msg}`);
       }
     })
     .then(() => console.log('Subscribed to chain tip'))
@@ -36,7 +39,7 @@ async function main(): Promise<void> {
   subscriber
     .subscribe('__keyevent@0__:sadd', async msg => {
       if (msg.indexOf('.order.') >= 0) {
-        console.log('New Order Output');
+        console.log('[Order] New');
       } else if (msg.indexOf('.pool.') >= 0) {
         const parts = msg.split('.');
         let tokenA: string, tokenB: string;
@@ -44,15 +47,14 @@ async function main(): Promise<void> {
         tokenA = msg.indexOf(':') >= 0 ? parts[3] : 'ADA'; // 
         const amounts = (await client.sMembers(msg))?.at(0)?.split(':') || [];
         if (amounts.length > 0) {
-          console.log(`[${tokenA}/${tokenB}] Pool: ${parseInt(amounts[0])/parseInt(amounts[1])}`);
+          console.log(`[Pool] ${tokenA}/${tokenB}: Price ${Big(amounts[0]).div(Big(amounts[1]))}`);
         }
-        console.log(`Amounts: ${amounts}`);
       } else {
-        console.log(`Unknown event: ${msg}`);
+        console.log(`[Unknown]: ${msg}`);
        }
     })
-    .then(() => console.log('Subscribed to minswap changes'))
+    .then(() => console.log('Subscribed to minswap order and pool updates'))
     .catch(console.error);
 }
 
-main();
+consumer();

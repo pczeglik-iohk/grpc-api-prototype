@@ -7,13 +7,15 @@
   "author": "William Wolff",
   "license": "MIT",
   "scripts": {
-    "start": "yarn build && node ./bin/app.js",
-    "dev": "yarn ts-node ./src/app.ts",
+    "start": "yarn build && node ./bin/redis.js",
+    "dev": "yarn ts-node ./src/redis.ts",
     "build": "yarn tsc",
     "prettier": "prettier --write ."
   },
   "dependencies": {
+    "@types/big.js": "^6.1.6",
     "@types/node": "^18.11.12",
+    "big.js": "^6.2.1",
     "express": "^4.18.2",
     "redis": "^4.5.1",
     "typescript": "^4.9.4"
