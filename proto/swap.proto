@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package swap;
+
+service Swap {
+  rpc Init (SwapRequest) returns (SwapsResponse) {};
+  rpc Liquidity (SwapRequest) returns (stream SwapResponse) {};
+}
+
+message SwapRequest {
+  repeated string tokens = 1;
+}
+
+message SwapResponse {
+  Token a = 1;
+  Token b = 2;
+}
+
+message SwapsResponse {
+  repeated SwapResponse pairs = 1;
+}
+
+message Token {
+  string policy = 1;
+  string name = 2;
+  uint64 amount = 3;
+}
