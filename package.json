@@ -6,6 +6,11 @@
   "repository": "https://github.com/william-wolff-io/grpc-api-prototype.git",
   "author": "William Wolff",
   "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0",
+    "yarn": ">=1.22.0",
+    "npm": "please-use-yarn"
+  },
   "scripts": {
     "start:server": "node ./bin/server/server.js",
     "start:client": "node ./bin/client/client.js",
