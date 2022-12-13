@@ -16,7 +16,7 @@
     "start:client": "node ./bin/client/client.js",
     "dev:server": "yarn ts-node ./src/server",
     "dev:client": "yarn ts-node ./src/client",
-    "proto:gen": "yarn proto-loader-gen-types --grpcLib=@grpc/grpc-js --outDir=./src/proto ./proto/*.proto",
+    "proto:gen": "yarn proto-loader-gen-types --grpcLib=@grpc/grpc-js --includeComments --outDir=./src/proto ./proto/*.proto",
     "build": "yarn tsc",
     "prettier": "prettier --write ."
   },

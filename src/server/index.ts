@@ -106,8 +106,7 @@ server.bindAsync(
     Promise.all([client.connect(), subscriber.connect()]).then(() => {
       // Listener for cache updates to facilitate init grpc calls
       client!.subscribe(LiquidityChangeEvent.key, (msg) =>
-        LiquidityChangeEvent
-          .handler(msg, subscriber)
+        LiquidityChangeEvent.handler(msg, subscriber)
           .then(updateCache)
           .catch((e) => console.log(e))
       );

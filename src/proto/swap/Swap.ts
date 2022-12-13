@@ -9,10 +9,16 @@ import type { TradingPair as _swap_TradingPair, TradingPair__Output as _swap_Tra
 import type { TradingPairListResponse as _swap_TradingPairListResponse, TradingPairListResponse__Output as _swap_TradingPairListResponse__Output } from '../swap/TradingPairListResponse';
 
 export interface SwapClient extends grpc.Client {
+  /**
+   * Read Domain
+   */
   Init(argument: _swap_LiquidityRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_swap_TradingPairListResponse__Output>): grpc.ClientUnaryCall;
   Init(argument: _swap_LiquidityRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_swap_TradingPairListResponse__Output>): grpc.ClientUnaryCall;
   Init(argument: _swap_LiquidityRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_swap_TradingPairListResponse__Output>): grpc.ClientUnaryCall;
   Init(argument: _swap_LiquidityRequest, callback: grpc.requestCallback<_swap_TradingPairListResponse__Output>): grpc.ClientUnaryCall;
+  /**
+   * Read Domain
+   */
   init(argument: _swap_LiquidityRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_swap_TradingPairListResponse__Output>): grpc.ClientUnaryCall;
   init(argument: _swap_LiquidityRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_swap_TradingPairListResponse__Output>): grpc.ClientUnaryCall;
   init(argument: _swap_LiquidityRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_swap_TradingPairListResponse__Output>): grpc.ClientUnaryCall;
@@ -23,10 +29,16 @@ export interface SwapClient extends grpc.Client {
   liquidity(argument: _swap_LiquidityRequest, metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientReadableStream<_swap_TradingPair__Output>;
   liquidity(argument: _swap_LiquidityRequest, options?: grpc.CallOptions): grpc.ClientReadableStream<_swap_TradingPair__Output>;
   
+  /**
+   * Write Domain
+   */
   Swap(argument: _swap_SwapRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_swap_SwapTransaction__Output>): grpc.ClientUnaryCall;
   Swap(argument: _swap_SwapRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_swap_SwapTransaction__Output>): grpc.ClientUnaryCall;
   Swap(argument: _swap_SwapRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_swap_SwapTransaction__Output>): grpc.ClientUnaryCall;
   Swap(argument: _swap_SwapRequest, callback: grpc.requestCallback<_swap_SwapTransaction__Output>): grpc.ClientUnaryCall;
+  /**
+   * Write Domain
+   */
   swap(argument: _swap_SwapRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_swap_SwapTransaction__Output>): grpc.ClientUnaryCall;
   swap(argument: _swap_SwapRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_swap_SwapTransaction__Output>): grpc.ClientUnaryCall;
   swap(argument: _swap_SwapRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_swap_SwapTransaction__Output>): grpc.ClientUnaryCall;
@@ -35,10 +47,16 @@ export interface SwapClient extends grpc.Client {
 }
 
 export interface SwapHandlers extends grpc.UntypedServiceImplementation {
+  /**
+   * Read Domain
+   */
   Init: grpc.handleUnaryCall<_swap_LiquidityRequest__Output, _swap_TradingPairListResponse>;
   
   Liquidity: grpc.handleServerStreamingCall<_swap_LiquidityRequest__Output, _swap_TradingPair>;
   
+  /**
+   * Write Domain
+   */
   Swap: grpc.handleUnaryCall<_swap_SwapRequest__Output, _swap_SwapTransaction>;
   
 }
