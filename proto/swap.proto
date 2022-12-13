@@ -3,25 +3,62 @@ syntax = "proto3";
 package swap;
 
 service Swap {
-  rpc Init (SwapRequest) returns (SwapsResponse) {};
-  rpc Liquidity (SwapRequest) returns (stream SwapResponse) {};
+  // Read Domain
+  rpc Init (LiquidityRequest) returns (TradingPairListResponse) {};
+  rpc Liquidity (LiquidityRequest) returns (stream TradingPair) {};
+  
+  // Write Domain
+  rpc Swap (SwapRequest) returns (SwapTransaction) {};
 }
 
-message SwapRequest {
-  repeated string tokens = 1;
-}
 
-message SwapResponse {
-  Token a = 1;
-  Token b = 2;
-}
-
-message SwapsResponse {
-  repeated SwapResponse pairs = 1;
-}
+// Common Message Types
 
 message Token {
   string policy = 1;
   string name = 2;
   uint64 amount = 3;
 }
+
+message TradingPair {
+  Token a = 1;
+  Token b = 2;
+}
+
+// Read Domain Message Types
+
+message LiquidityRequest {
+  repeated string tokens = 1;
+}
+
+message TradingPairListResponse {
+  repeated TradingPair pairs = 1;
+}
+
+// Write Domain Message Types
+
+message SwapRequest {
+  TradingPair pair = 1;
+  repeated UTxO utxos = 2;
+}
+
+message SwapTransaction {
+  string tx_cbor = 1;
+}
+
+message TxIn {
+  string tx_hash = 1;
+  uint32 output_id = 2;
+}
+
+message TxOut {
+  string address = 1;
+  repeated Token value = 2;
+}
+
+message UTxO {
+  TxIn in = 1;
+  TxOut out = 2;
+}
+
+

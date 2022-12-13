@@ -4,16 +4,16 @@ import { Server, ServerCredentials } from '@grpc/grpc-js';
 import { createClient, RedisClientType } from 'redis';
 import swap from '../grpc';
 import { SwapHandlers } from '../proto/swap/Swap';
-import { SwapResponse__Output } from '../proto/swap/SwapResponse';
 import { Token__Output } from '../proto/swap/Token';
-import liquidityListener from '../redis/liquidity';
+import { TradingPair__Output } from '../proto/swap/TradingPair';
+import LiquidityChangeEvent from '../redis/LiquidityChangeEventHandler';
 import { grpc_server_log, redis_log } from '../utils/print';
 
 const PORT = process.env.GRPC_PORT || 4001;
 const server = new Server();
 let client: RedisClientType | undefined = undefined;
 
-const CACHE: { [key: string]: SwapResponse__Output } = {};
+const CACHE: { [key: string]: TradingPair__Output } = {};
 const updateCache = (pair?: [Token__Output, Token__Output]) => {
   if (!pair) return;
   grpc_server_log(`Pool Update: ${keyForPair(pair)}`);
@@ -34,7 +34,7 @@ server.addService(swap.Swap.service, {
     const tokens = req.request.tokens;
     if (tokens && tokens.length > 0) {
       const keys = Object.keys(CACHE).filter((k) => tokens.indexOf(k) >= 0);
-      const result: SwapResponse__Output[] = [];
+      const result: TradingPair__Output[] = [];
       for (const key in keys) {
         result.push(CACHE[key]);
       }
@@ -54,8 +54,8 @@ server.addService(swap.Swap.service, {
 
     await subscriber.connect();
     const tokens = call.request.tokens;
-    subscriber.subscribe(liquidityListener.key, (msg) =>
-      liquidityListener.handler(msg, client!).then((pair) => {
+    subscriber.subscribe(LiquidityChangeEvent.key, (msg) =>
+      LiquidityChangeEvent.handler(msg, client!).then((pair) => {
         if (!pair) return;
         if (
           !tokens ||
@@ -69,6 +69,10 @@ server.addService(swap.Swap.service, {
         // call.end();
       })
     );
+  },
+  Swap: (req, res) => {
+    console.log(req);
+    // Pending
   },
 } as SwapHandlers);
 
@@ -101,8 +105,8 @@ server.bindAsync(
 
     Promise.all([client.connect(), subscriber.connect()]).then(() => {
       // Listener for cache updates to facilitate init grpc calls
-      client!.subscribe(liquidityListener.key, (msg) =>
-        liquidityListener
+      client!.subscribe(LiquidityChangeEvent.key, (msg) =>
+        LiquidityChangeEvent
           .handler(msg, subscriber)
           .then(updateCache)
           .catch((e) => console.log(e))

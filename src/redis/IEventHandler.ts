@@ -1,6 +1,6 @@
 import { RedisClientType } from 'redis';
 
-export interface RedisEventListener<T> {
+export interface IEventHandler<T> {
   key: string;
   handler: (_msg: string, _client: RedisClientType) => T;
 }

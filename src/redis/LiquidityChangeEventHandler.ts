@@ -3,10 +3,10 @@ import Long from 'long';
 import { SwapRequest__Output } from '../proto/swap/SwapRequest';
 import { Token__Output } from '../proto/swap/Token';
 import { redis_log } from '../utils/print';
-import { RedisEventListener } from './listener';
+import { IEventHandler } from './IEventHandler';
 
 let orderTxIns: string[] = [];
-const liquidityListener: RedisEventListener<
+const LiquidityChangeEvent: IEventHandler<
   Promise<[_a: Token__Output, _b: Token__Output] | undefined>
 > = {
   key: '__keyevent@0__:sadd',
@@ -74,4 +74,4 @@ const liquidityListener: RedisEventListener<
   },
 };
 
-export default liquidityListener;
+export default LiquidityChangeEvent;

@@ -1,7 +1,7 @@
 import { redis_log } from '../utils/print';
-import { RedisEventListener } from './listener';
+import { IEventHandler } from './IEventHandler';
 
-const blockListener: RedisEventListener<Promise<[string, string]>> = {
+const BlockEventHandler: IEventHandler<Promise<[string, string]>> = {
   key: '__keyevent@0__:set',
   handler: async (msg, client) => {
     if (msg === '_cursor') {
@@ -20,4 +20,4 @@ const blockListener: RedisEventListener<Promise<[string, string]>> = {
   },
 };
 
-export default blockListener;
+export default BlockEventHandler;

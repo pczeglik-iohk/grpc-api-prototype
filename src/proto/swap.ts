@@ -9,11 +9,16 @@ type SubtypeConstructor<Constructor extends new (...args: any) => any, Subtype> 
 
 export interface ProtoGrpcType {
   swap: {
+    LiquidityRequest: MessageTypeDefinition
     Swap: SubtypeConstructor<typeof grpc.Client, _swap_SwapClient> & { service: _swap_SwapDefinition }
     SwapRequest: MessageTypeDefinition
-    SwapResponse: MessageTypeDefinition
-    SwapsResponse: MessageTypeDefinition
+    SwapTransaction: MessageTypeDefinition
     Token: MessageTypeDefinition
+    TradingPair: MessageTypeDefinition
+    TradingPairListResponse: MessageTypeDefinition
+    TxIn: MessageTypeDefinition
+    TxOut: MessageTypeDefinition
+    UTxO: MessageTypeDefinition
   }
 }
 
