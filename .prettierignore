@@ -1,3 +1,4 @@
 .yarn
+src/proto
 bin
 node_modules
