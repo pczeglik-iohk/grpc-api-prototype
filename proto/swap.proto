@@ -5,6 +5,7 @@ package swap;
 service Swap {
   // Read Domain
   rpc Init (LiquidityRequest) returns (TradingPairListResponse) {};
+  rpc OrderStatus (TxHashRequest) returns (stream TxStatusResponse) {};
   rpc Liquidity (LiquidityRequest) returns (stream TradingPair) {};
   
   // Write Domain
@@ -31,6 +32,21 @@ message LiquidityRequest {
   repeated string tokens = 1;
 }
 
+message TxHashRequest {
+  bytes tx_hash = 1;
+}
+
+enum TxStatus {
+  PENDING_SUBMISSION = 0;
+  PENDING_BATCHING = 1;
+  CANCELLED = 2;
+  COMPLETE = 4;
+}
+
+message TxStatusResponse {
+  TxStatus status = 1;
+}
+
 message TradingPairListResponse {
   repeated TradingPair pairs = 1;
 }
@@ -38,8 +54,9 @@ message TradingPairListResponse {
 // Write Domain Message Types
 
 message SwapRequest {
-  TradingPair pair = 1;
-  repeated UTxO utxos = 2;
+  string dest_addr = 1;
+  TradingPair pair = 2;
+  repeated UTxO utxos = 3;
 }
 
 message SwapTransaction {
