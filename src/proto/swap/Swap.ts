@@ -7,6 +7,8 @@ import type { SwapRequest as _swap_SwapRequest, SwapRequest__Output as _swap_Swa
 import type { SwapTransaction as _swap_SwapTransaction, SwapTransaction__Output as _swap_SwapTransaction__Output } from '../swap/SwapTransaction';
 import type { TradingPair as _swap_TradingPair, TradingPair__Output as _swap_TradingPair__Output } from '../swap/TradingPair';
 import type { TradingPairListResponse as _swap_TradingPairListResponse, TradingPairListResponse__Output as _swap_TradingPairListResponse__Output } from '../swap/TradingPairListResponse';
+import type { TxHashRequest as _swap_TxHashRequest, TxHashRequest__Output as _swap_TxHashRequest__Output } from '../swap/TxHashRequest';
+import type { TxStatusResponse as _swap_TxStatusResponse, TxStatusResponse__Output as _swap_TxStatusResponse__Output } from '../swap/TxStatusResponse';
 
 export interface SwapClient extends grpc.Client {
   /**
@@ -28,6 +30,11 @@ export interface SwapClient extends grpc.Client {
   Liquidity(argument: _swap_LiquidityRequest, options?: grpc.CallOptions): grpc.ClientReadableStream<_swap_TradingPair__Output>;
   liquidity(argument: _swap_LiquidityRequest, metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientReadableStream<_swap_TradingPair__Output>;
   liquidity(argument: _swap_LiquidityRequest, options?: grpc.CallOptions): grpc.ClientReadableStream<_swap_TradingPair__Output>;
+  
+  OrderStatus(argument: _swap_TxHashRequest, metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientReadableStream<_swap_TxStatusResponse__Output>;
+  OrderStatus(argument: _swap_TxHashRequest, options?: grpc.CallOptions): grpc.ClientReadableStream<_swap_TxStatusResponse__Output>;
+  orderStatus(argument: _swap_TxHashRequest, metadata: grpc.Metadata, options?: grpc.CallOptions): grpc.ClientReadableStream<_swap_TxStatusResponse__Output>;
+  orderStatus(argument: _swap_TxHashRequest, options?: grpc.CallOptions): grpc.ClientReadableStream<_swap_TxStatusResponse__Output>;
   
   /**
    * Write Domain
@@ -54,6 +61,8 @@ export interface SwapHandlers extends grpc.UntypedServiceImplementation {
   
   Liquidity: grpc.handleServerStreamingCall<_swap_LiquidityRequest__Output, _swap_TradingPair>;
   
+  OrderStatus: grpc.handleServerStreamingCall<_swap_TxHashRequest__Output, _swap_TxStatusResponse>;
+  
   /**
    * Write Domain
    */
@@ -64,5 +73,6 @@ export interface SwapHandlers extends grpc.UntypedServiceImplementation {
 export interface SwapDefinition extends grpc.ServiceDefinition {
   Init: MethodDefinition<_swap_LiquidityRequest, _swap_TradingPairListResponse, _swap_LiquidityRequest__Output, _swap_TradingPairListResponse__Output>
   Liquidity: MethodDefinition<_swap_LiquidityRequest, _swap_TradingPair, _swap_LiquidityRequest__Output, _swap_TradingPair__Output>
+  OrderStatus: MethodDefinition<_swap_TxHashRequest, _swap_TxStatusResponse, _swap_TxHashRequest__Output, _swap_TxStatusResponse__Output>
   Swap: MethodDefinition<_swap_SwapRequest, _swap_SwapTransaction, _swap_SwapRequest__Output, _swap_SwapTransaction__Output>
 }
