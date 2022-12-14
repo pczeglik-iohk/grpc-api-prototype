@@ -8,6 +8,7 @@ import { Token__Output } from '../proto/swap/Token';
 import { TradingPair__Output } from '../proto/swap/TradingPair';
 import LiquidityChangeEvent from '../redis/LiquidityChangeEventHandler';
 import { grpc_server_log, redis_log } from '../utils/print';
+import { isValid, keyForPair } from '../utils/token';
 
 const PORT = process.env.GRPC_PORT || 4001;
 const server = new Server();
@@ -18,15 +19,6 @@ const updateCache = (pair?: [Token__Output, Token__Output]) => {
   if (!pair) return;
   grpc_server_log(`Pool Update: ${keyForPair(pair)}`);
   CACHE[keyForPair(pair)] = { a: pair[0], b: pair[1] };
-};
-
-const keyForPair = (pair: [Token__Output, Token__Output]) => {
-  if (pair[0].policy === '') {
-    return `${pair[1].policy!}.${pair[1].name!}`;
-  } else {
-    return `${pair[0].policy!}.${pair[0].name!}:${pair[1].policy!}.${pair[1]
-      .name!}`;
-  }
 };
 
 server.addService(swap.Swap.service, {
@@ -72,7 +64,17 @@ server.addService(swap.Swap.service, {
   },
   Swap: (req, res) => {
     console.log(req);
-    // Pending
+    const tokenA = req.request.pair?.a;
+    const tokenB = req.request.pair?.b;
+    const utxos = req.request.utxos;
+    if (!isValid(tokenA, true) || !isValid(tokenB)) {
+      res(new Error('Missing valid arguments for swap pair'));
+      return;
+    }
+    if (!utxos || utxos.length === 0) {
+      res(new Error('Missing utxos'), null);
+      return;
+    }
   },
 } as SwapHandlers);
 
