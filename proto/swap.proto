@@ -9,7 +9,7 @@ service Swap {
   rpc Liquidity (LiquidityRequest) returns (stream TradingPair) {};
   
   // Write Domain
-  rpc Swap (SwapRequest) returns (SwapTransaction) {};
+  rpc Swap (SwapRequest) returns (SwapResponse) {};
 }
 
 
@@ -41,6 +41,7 @@ enum TxStatus {
   PENDING_BATCHING = 1;
   CANCELLED = 2;
   COMPLETE = 4;
+  INVALID = 5;
 }
 
 message TxStatusResponse {
@@ -56,11 +57,11 @@ message TradingPairListResponse {
 message SwapRequest {
   string dest_addr = 1;
   TradingPair pair = 2;
-  repeated UTxO utxos = 3;
 }
 
-message SwapTransaction {
-  string tx_cbor = 1;
+message SwapResponse {
+  repeated UTxO ins = 1;
+  repeated TxOut outs = 2;
 }
 
 message TxIn {
