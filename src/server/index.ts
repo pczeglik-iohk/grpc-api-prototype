@@ -136,10 +136,13 @@ server.bindAsync(
           .then((result) => {
             if (result.txHashes.length > 0) {
               grpc_server_log(
-                `${result.isNew ? 'Added' : 'Removed'}:\n\t${result.txHashes.join(
-                  '\n\t'
-                )}`
+                `${result.txHashes.length} Order(s) ${result.isNew ? 'Added' : 'Removed'}:\n\t${result.txHashes
+                  .slice(0, Math.min(20, result.txHashes.length))
+                  .join('\n\t')}`
               );
+              if (result.txHashes.length > 20) {
+                grpc_server_log(`\t${result.txHashes.length - 20} more ...`);
+              }
             }
           })
           .catch((_) => {});

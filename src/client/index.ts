@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 import { credentials } from '@grpc/grpc-js';
+import Big from 'big.js';
 import swap from '../grpc';
 import { SwapResponse } from '../proto/swap/SwapResponse';
 import { TradingPair__Output } from '../proto/swap/TradingPair';
@@ -27,14 +28,16 @@ client.waitForReady(deadline, (err) => {
     .on('data', (pair: TradingPair__Output) => {
       grpc_client_log(`Liquidity Change:`);
       grpc_client_log(
-        `(${pair.a?.name}/${pair.b?.name}): Price ${pair.a?.amount?.div(
+        `(${pair.a?.name}/${pair.b?.name}): Price ${pair.a?.amount?.divide(
           pair.b!.amount!
         )}`
       );
     })
     .on('end', () => grpc_client_log(`Disconnected`));
 
-  const tokens: string[] = [];
+  const tokens: string[] = [
+    // 5dac8536653edc12f6f5e1045d8164b9f59998d3bdc300fc92843489.NMKR
+  ];
   client
     .Init({ tokens }, (err, res) => {
       if (err) {
@@ -48,11 +51,14 @@ client.waitForReady(deadline, (err) => {
       }
       grpc_client_log('Init Liquidity');
       res?.pairs?.forEach((pair) => {
-        grpc_client_log(
-          `(${pair.a?.name}/${pair.b?.name}): Price ${pair.a?.amount?.div(
-            pair.b!.amount!
-          )}`
+        const a = pair.a,
+          b = pair.b;
+        if (!a || !b) return;
+
+        const price = Big(a.amount!.toUnsigned().toString()).div(
+          Big(b.amount!.toUnsigned().toString())
         );
+        grpc_client_log(`(${pair.a?.name}/${pair.b?.name}): Price ${price}`);
       });
     })
     .on('error', errorHandler);
