@@ -17,9 +17,11 @@ export interface ProtoGrpcType {
     TradingPair: MessageTypeDefinition
     TradingPairListResponse: MessageTypeDefinition
     TxHashRequest: MessageTypeDefinition
+    TxIn: MessageTypeDefinition
     TxOut: MessageTypeDefinition
     TxStatus: EnumTypeDefinition
     TxStatusResponse: MessageTypeDefinition
+    UTxO: MessageTypeDefinition
   }
 }
 
