@@ -4,7 +4,7 @@ import type * as grpc from '@grpc/grpc-js'
 import type { MethodDefinition } from '@grpc/proto-loader'
 import type { LiquidityRequest as _swap_LiquidityRequest, LiquidityRequest__Output as _swap_LiquidityRequest__Output } from '../swap/LiquidityRequest';
 import type { SwapRequest as _swap_SwapRequest, SwapRequest__Output as _swap_SwapRequest__Output } from '../swap/SwapRequest';
-import type { SwapTransaction as _swap_SwapTransaction, SwapTransaction__Output as _swap_SwapTransaction__Output } from '../swap/SwapTransaction';
+import type { SwapResponse as _swap_SwapResponse, SwapResponse__Output as _swap_SwapResponse__Output } from '../swap/SwapResponse';
 import type { TradingPair as _swap_TradingPair, TradingPair__Output as _swap_TradingPair__Output } from '../swap/TradingPair';
 import type { TradingPairListResponse as _swap_TradingPairListResponse, TradingPairListResponse__Output as _swap_TradingPairListResponse__Output } from '../swap/TradingPairListResponse';
 import type { TxHashRequest as _swap_TxHashRequest, TxHashRequest__Output as _swap_TxHashRequest__Output } from '../swap/TxHashRequest';
@@ -39,17 +39,17 @@ export interface SwapClient extends grpc.Client {
   /**
    * Write Domain
    */
-  Swap(argument: _swap_SwapRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_swap_SwapTransaction__Output>): grpc.ClientUnaryCall;
-  Swap(argument: _swap_SwapRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_swap_SwapTransaction__Output>): grpc.ClientUnaryCall;
-  Swap(argument: _swap_SwapRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_swap_SwapTransaction__Output>): grpc.ClientUnaryCall;
-  Swap(argument: _swap_SwapRequest, callback: grpc.requestCallback<_swap_SwapTransaction__Output>): grpc.ClientUnaryCall;
+  Swap(argument: _swap_SwapRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_swap_SwapResponse__Output>): grpc.ClientUnaryCall;
+  Swap(argument: _swap_SwapRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_swap_SwapResponse__Output>): grpc.ClientUnaryCall;
+  Swap(argument: _swap_SwapRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_swap_SwapResponse__Output>): grpc.ClientUnaryCall;
+  Swap(argument: _swap_SwapRequest, callback: grpc.requestCallback<_swap_SwapResponse__Output>): grpc.ClientUnaryCall;
   /**
    * Write Domain
    */
-  swap(argument: _swap_SwapRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_swap_SwapTransaction__Output>): grpc.ClientUnaryCall;
-  swap(argument: _swap_SwapRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_swap_SwapTransaction__Output>): grpc.ClientUnaryCall;
-  swap(argument: _swap_SwapRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_swap_SwapTransaction__Output>): grpc.ClientUnaryCall;
-  swap(argument: _swap_SwapRequest, callback: grpc.requestCallback<_swap_SwapTransaction__Output>): grpc.ClientUnaryCall;
+  swap(argument: _swap_SwapRequest, metadata: grpc.Metadata, options: grpc.CallOptions, callback: grpc.requestCallback<_swap_SwapResponse__Output>): grpc.ClientUnaryCall;
+  swap(argument: _swap_SwapRequest, metadata: grpc.Metadata, callback: grpc.requestCallback<_swap_SwapResponse__Output>): grpc.ClientUnaryCall;
+  swap(argument: _swap_SwapRequest, options: grpc.CallOptions, callback: grpc.requestCallback<_swap_SwapResponse__Output>): grpc.ClientUnaryCall;
+  swap(argument: _swap_SwapRequest, callback: grpc.requestCallback<_swap_SwapResponse__Output>): grpc.ClientUnaryCall;
   
 }
 
@@ -66,7 +66,7 @@ export interface SwapHandlers extends grpc.UntypedServiceImplementation {
   /**
    * Write Domain
    */
-  Swap: grpc.handleUnaryCall<_swap_SwapRequest__Output, _swap_SwapTransaction>;
+  Swap: grpc.handleUnaryCall<_swap_SwapRequest__Output, _swap_SwapResponse>;
   
 }
 
@@ -74,5 +74,5 @@ export interface SwapDefinition extends grpc.ServiceDefinition {
   Init: MethodDefinition<_swap_LiquidityRequest, _swap_TradingPairListResponse, _swap_LiquidityRequest__Output, _swap_TradingPairListResponse__Output>
   Liquidity: MethodDefinition<_swap_LiquidityRequest, _swap_TradingPair, _swap_LiquidityRequest__Output, _swap_TradingPair__Output>
   OrderStatus: MethodDefinition<_swap_TxHashRequest, _swap_TxStatusResponse, _swap_TxHashRequest__Output, _swap_TxStatusResponse__Output>
-  Swap: MethodDefinition<_swap_SwapRequest, _swap_SwapTransaction, _swap_SwapRequest__Output, _swap_SwapTransaction__Output>
+  Swap: MethodDefinition<_swap_SwapRequest, _swap_SwapResponse, _swap_SwapRequest__Output, _swap_SwapResponse__Output>
 }

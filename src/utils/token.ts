@@ -1,6 +1,9 @@
 import { Token__Output } from '../proto/swap/Token';
 
-export const isValid = (t?: Token__Output, allowEmptyPolicy: boolean = false) => {
+export const isValid = (
+  t?: Token__Output,
+  allowEmptyPolicy: boolean = false
+) => {
   return (
     t &&
     t.name &&
@@ -12,12 +15,15 @@ export const isValid = (t?: Token__Output, allowEmptyPolicy: boolean = false) =>
   );
 };
 
-
 export const keyForTokenOutput = (t: Token__Output) => {
   return t.policy === '' ? '' : `${t.policy!}.${t.name!}`;
-}
+};
 
 export const keyForPair = (pair: [Token__Output, Token__Output]) => {
   const tokenAKey = keyForTokenOutput(pair[0]);
-  return `${tokenAKey === '' ? '' : `${tokenAKey}:`}${keyForTokenOutput(pair[1])}`;
+  const tokenBKey = keyForTokenOutput(pair[1]);
+  if (tokenAKey < tokenBKey)
+    // sort alphanumerically for correct pool name
+    return `${tokenAKey === '' ? '' : `${tokenAKey}:`}${tokenBKey}`;
+  return `${tokenBKey === '' ? '' : `${tokenBKey}:`}${tokenAKey}`;
 };

@@ -1,13 +1,11 @@
 // Original file: proto/swap.proto
 
-import type { Token as _swap_Token, Token__Output as _swap_Token__Output } from '../swap/Token';
+import type { TxOut as _swap_TxOut, TxOut__Output as _swap_TxOut__Output } from '../swap/TxOut';
 
 export interface SwapResponse {
-  'a'?: (_swap_Token | null);
-  'b'?: (_swap_Token | null);
+  'outs'?: (_swap_TxOut)[];
 }
 
 export interface SwapResponse__Output {
-  'a'?: (_swap_Token__Output);
-  'b'?: (_swap_Token__Output);
+  'outs'?: (_swap_TxOut__Output)[];
 }

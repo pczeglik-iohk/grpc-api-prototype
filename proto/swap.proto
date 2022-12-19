@@ -78,5 +78,3 @@ message UTxO {
   TxIn in = 1;
   TxOut out = 2;
 }
-
-

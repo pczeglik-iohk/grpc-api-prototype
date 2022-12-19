@@ -22,15 +22,9 @@ client.waitForReady(deadline, (err) => {
   const liquidityStream = client.Liquidity({}); // no token filters passed
   liquidityStream
     .on('error', (err) => grpc_client_log(err.message))
-    .on('data', (pair: SwapResponse) => {
+    .on('data', (response: SwapResponse) => {
       grpc_client_log(`New Data:`);
-      console.log(pair);
-      console.log(
-        `Token A: ${pair.a?.name}, Amount: ${pair.a?.amount?.toString()}`
-      );
-      console.log(
-        `Token B: ${pair.b?.name}, Amount: ${pair.b?.amount?.toString()}`
-      );
+      console.log(response);
     })
     .on('end', () => grpc_client_log(`Disconnected`));
 });
