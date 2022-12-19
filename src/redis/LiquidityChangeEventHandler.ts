@@ -1,12 +1,8 @@
-import Big from 'big.js';
 import Long from 'long';
-import { SwapRequest__Output } from '../proto/swap/SwapRequest';
 import { Token__Output } from '../proto/swap/Token';
 import { redis_log } from '../utils/print';
-import { keyForPair } from '../utils/token';
 import { IEventHandler } from './IEventHandler';
 
-let orderTxIns: string[] = [];
 const LiquidityChangeEvent: IEventHandler<
   Promise<[_a: Token__Output, _b: Token__Output] | undefined>
 > = {
@@ -40,20 +36,18 @@ const LiquidityChangeEvent: IEventHandler<
     if (members.length > 2) {
       console.warn('Found more than 2 liquidity sources');
       if (token_a_policy === '') {
-        console.debug(`pool.${token_b_policy}.${token_b_name}`)
+        console.debug(`pool.${token_b_policy}.${token_b_name}`);
       } else {
-        console.debug(`pool.${token_a_policy}.${token_a_name}:${token_b_policy}.${token_b_name}`)
+        console.debug(
+          `pool.${token_a_policy}.${token_a_name}:${token_b_policy}.${token_b_name}`
+        );
       }
     }
     for (const member of members) {
       const parts = member.split(':');
 
-      token_a_amount = token_a_amount.add(
-        Long.fromString(parts[1], true, 10)
-      );
-      token_b_amount = token_b_amount.add(
-        Long.fromString(parts[2], true, 10)
-      );
+      token_a_amount = token_a_amount.add(Long.fromString(parts[1], true, 10));
+      token_b_amount = token_b_amount.add(Long.fromString(parts[2], true, 10));
     }
 
     redis_log(

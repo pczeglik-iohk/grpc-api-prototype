@@ -8,7 +8,7 @@ const BlockEventHandler: IEventHandler<Promise<[string, string]>> = {
     await query.connect();
 
     if (msg === '_cursor') {
-      const cursor = await client.get('_cursor');
+      const cursor = await client.get(msg);
 
       if (cursor) {
         const parts = cursor.split(',');

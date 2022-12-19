@@ -17,28 +17,36 @@ const PORT = process.env.GRPC_PORT || 4001;
 const server = new Server();
 let client: RedisClientType | undefined = undefined;
 
-const PENDING_ORDERS: Set<String> = new Set();
-const LIQUIDITY_CACHE: { [key: string]: TradingPair__Output } = {};
+export interface ICache {
+  orders: Set<string>;
+  liquidity: { [key: string]: TradingPair__Output };
+}
+
+export const CACHE: ICache = {
+  orders: new Set<string>(),
+  liquidity: {},
+};
+
 const updateCache = (pair?: [Token__Output, Token__Output]) => {
   if (!pair) return;
-  grpc_server_log(`Pool Update: ${keyForPair(pair)}`);
-  LIQUIDITY_CACHE[keyForPair(pair)] = { a: pair[0], b: pair[1] };
+  grpc_server_log(`Pool Update: pool.${keyForPair(pair)}`);
+  CACHE.liquidity[keyForPair(pair)] = { a: pair[0], b: pair[1] };
 };
 
 server.addService(swap.Swap.service, {
   Init: (req, res) => {
     const tokens = req.request.tokens;
     if (tokens && tokens.length > 0) {
-      const keys = Object.keys(LIQUIDITY_CACHE).filter(
-        (k) => tokens.indexOf(k) >= 0
+      const keys = Object.keys(CACHE.liquidity).filter((k) =>
+        tokens.includes(k)
       );
       const result: TradingPair__Output[] = [];
-      for (const key in keys) {
-        result.push(LIQUIDITY_CACHE[key]);
+      for (const key of keys) {
+        result.push(CACHE.liquidity[key]);
       }
       res(null, { pairs: result });
     } else {
-      res(null, { pairs: Object.values(LIQUIDITY_CACHE) });
+      res(null, { pairs: Object.values(CACHE.liquidity) });
     }
   },
   Liquidity: async (call) => {
@@ -78,7 +86,7 @@ server.addService(swap.Swap.service, {
       return;
     }
 
-    if (PENDING_ORDERS.has(txHash.toString())) {
+    if (CACHE.orders.has(txHash.toString())) {
       call.write({ status: 'PENDING_BATCHING' });
     }
     // ToDo
@@ -122,22 +130,19 @@ server.bindAsync(
     await client.connect();
 
     // Observe Orders by default
-    for (const addr in (process.env.ORDER_ADDRS || '').split(',')) {
+    for (const addr of (process.env.ORDER_ADDRS || '').split(',')) {
       client?.subscribe((OrderEventHandler.key as DynamicKey)(addr), (msg) => {
-        OrderEventHandler.handler(msg, client!)
+        OrderEventHandler.handler(`${msg}:${addr}`, client!)
           .then((result) => {
-            grpc_server_log(
-              `${result.isNew ? 'Added' : 'Removed'}:\n\t${result.txHashes.join(
-                '\n\t'
-              )}`
-            );
-            if (result.isNew) {
-              result.txHashes.forEach((h) => PENDING_ORDERS.add(h));
-            } else {
-              result.txHashes.forEach((h) => PENDING_ORDERS.delete(h));
+            if (result.txHashes.length > 0) {
+              grpc_server_log(
+                `${result.isNew ? 'Added' : 'Removed'}:\n\t${result.txHashes.join(
+                  '\n\t'
+                )}`
+              );
             }
           })
-          .catch((e) => console.error(e));
+          .catch((_) => {});
       });
     }
 
